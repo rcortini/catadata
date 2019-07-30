@@ -1,0 +1,8 @@
+*.pyc
+data/
+trash/
+figures/
+*.ipynb_checkpoints
+*.png
+*.pdf
+*.dat
