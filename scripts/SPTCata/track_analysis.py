@@ -58,16 +58,13 @@ class SPT :
         # process tracks
         tracks_spots = self.spots.groupby('TRACK_ID')
         
-        # get the quality of the tracks if user wants
+        # get quality of tracks and list of excluded tracks
         if quality is not None :
-            track_statistics = pd.read_csv('%s/Track statistics.csv'%(self.datadir))
+            track_statistics = pd.read_csv('%s/Track statistics.csv'%(datadir))
             idx_tracks_to_keep = track_statistics.TRACK_MEAN_QUALITY > quality
-            try : 
-                tracks_to_keep = np.array(sorted(tracks_spots.groups.keys()))[idx_tracks_to_keep]
-            except IndexError :
-                print(self.datadir)
-                sys.exit(1)
-            self.spots = tracks_spots.filter(lambda x : x.name in tracks_to_keep)
+            tracks_to_keep = track_statistics[idx_tracks_to_keep].TRACK_ID
+            self.spots = tracks_spots.filter(lambda x : x.name in
+                                             tracks_to_keep.values)
 
         # process trajectories
         self.trajectory_spots = trajectories(self.spots, scale_l)
